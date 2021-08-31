@@ -1,6 +1,6 @@
 'use strict';
 
-import { CriptoObject, currency, DOMcriptomonedas, form } from "./dom.js";
+import { CriptoObject, currency, DOMcriptomonedas, form, price, highday, lowday, changepct24hour, lastupdate } from "./dom.js";
 
 function getCriptomonedas(criptomonedas){
     return new Promise(resolve => resolve(criptomonedas));
@@ -19,7 +19,7 @@ function checkAPI(){
     const URL = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${CriptoObject['cryptomoney']}&tsyms=${CriptoObject['currency']}`;
     fetch(URL)
         .then(response => response.json())
-            .then(response => evaluationHTML(response.DISPLAY[ CriptoObject['cryptomoney'] ][ CriptoObject['currency'] ]));
+            .then(response => printHTML(response.DISPLAY[ CriptoObject['cryptomoney'] ][ CriptoObject['currency'] ]));
 }
 
 function selectCriptomonedas(criptomonedas){
@@ -44,6 +44,16 @@ function getForm(e){
     }else{
         checkAPI();
     }
+}
+
+function printHTML(quote){
+    let {PRICE, HIGHDAY, LOWDAY, CHANGEPCT24HOUR, LASTUPDATE} = quote;
+
+    price.innerHTML = `Precio es: <span>${PRICE}</span>`;
+    highday.innerHTML =  `Precio mas elevado del día: <span>${HIGHDAY}</span>`;   
+    lowday.innerHTML =  `Precio mas bajo del día: <span>${LOWDAY}</span>`;
+    changepct24hour.innerHTML = `Variación últimas 24h:  <span>${CHANGEPCT24HOUR}%</span>`;
+    lastupdate.innerHTML = `Última actualización: <span>${LASTUPDATE}</span>`;
 }
 
 checkCriptomonedas();
